@@ -72,7 +72,7 @@ class Bot:
         if not self._check_user(update):
             return
 
-        t_data = self._dbio.fetch_cpu_data(
+        t_data = self._dbio.fetch_dht_data(
             t_end=datetime.datetime.now(),
             t_start=datetime.datetime.now() - datetime.timedelta(days=1),
         )
