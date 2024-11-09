@@ -1,0 +1,10 @@
+[Unit]
+Description=Temperature logger for the Thermobot
+
+[Service]
+ExecStart=/bin/bash /home/glebd/thermobot/thermometer.sh
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
