@@ -12,12 +12,12 @@ from telegram.ext import (
 
 from matplotlib import pyplot as plt
 import pandas as pd
-from dbio import DBIO, get_bot_token
+from dbio import DBIO
 
 
 class Bot:
     def __init__(self):
-        self._token = get_bot_token()
+        self._token = os.environ["TG_BOT_TOKEN"]
         self._dbio = DBIO()
         self._allowed_users = self._dbio.fetch_allowed_users()
 
@@ -40,7 +40,7 @@ class Bot:
         if not self._check_user(update):
             return
 
-        t_data = self._dbio.fetch_temp_data(
+        t_data = self._dbio.fetch_cpu_data(
             t_end=datetime.datetime.now(),
             t_start=datetime.datetime.now() - datetime.timedelta(hours=1),
         )
@@ -57,7 +57,7 @@ class Bot:
         if not self._check_user(update):
             return
 
-        t_data = self._dbio.fetch_temp_data(
+        t_data = self._dbio.fetch_cpu_data(
             t_end=datetime.datetime.now(),
             t_start=datetime.datetime.now() - datetime.timedelta(days=1),
         )
@@ -69,7 +69,7 @@ class Bot:
         await update.message.reply_photo("response.png")
 
     def run(self):
-        application = Application.builder().token(os.environ["TG_BOT_TOKEN"]).build()
+        application = Application.builder().token(self._token).build()
 
         application.add_handler(CommandHandler("start", self.start))
         application.add_handler(CommandHandler("last_hour", self.plot_last_hour))

@@ -1,7 +1,4 @@
 import asyncio
-import os
-import sys
-import sqlite3
 import datetime
 
 from dbio import DBIO
@@ -18,9 +15,26 @@ class Thermometer:
 
     def __init__(self):
         self._dbio = DBIO()
+        self._dht = None
+        try:
+            self._board = __import__("board")
+            self._adafruit_dht = __import__("adafruit_dht")
+            self._dht = self._adafruit_dht.DHT22(self._board.D4, use_pulseio=False)
+        except Exception as e:
+            print(e)
 
     def measure_once(self):
-        self._dbio.append_temp_reading(datetime.datetime.now(), self.get_cpu())
+        self._dbio.append_cpu_reading(datetime.datetime.now(), self.get_cpu())
+        if self._dht is not None:
+            try:
+                self._dbio.append_dht_reading(
+                    datetime.datetime.now(), self._dht.temperature, self._dht.humidity
+                )
+            except RuntimeError as re:
+                print(re.args[0])
+            except Exception as err:
+                self._dht.exit()
+                raise err
 
     async def measure_infinite(self, period: int = 1):
         while True:
