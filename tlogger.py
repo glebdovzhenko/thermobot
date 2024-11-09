@@ -48,9 +48,9 @@ class Thermometer:
                 np.empty(n_steps),
                 np.empty(n_steps),
             )
-            cpu_t[:] = np.NaN
-            dht_t[:] = np.NaN
-            dht_h[:] = np.NaN
+            cpu_t[:] = np.nan
+            dht_t[:] = np.nan
+            dht_h[:] = np.nan
 
             for ii in range(n_steps):
                 try:
