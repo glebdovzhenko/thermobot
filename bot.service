@@ -1,0 +1,10 @@
+[Unit]
+Description=Thermobot the Telegram Bot
+
+[Service]
+ExecStart=/bin/bash /home/glebd/thermobot/bot.sh
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
