@@ -54,7 +54,7 @@ class DBIO:
         connection.close()
         return [u[0] for u in allowed_users]
 
-    def append_cpu_reading(self, datetime, temp):
+    def append_cpu_reading(self, datetime, temp, verbose=True):
         connection = sqlite3.connect(self._db)
         cursor = connection.cursor()
         cursor.execute(
@@ -63,8 +63,10 @@ class DBIO:
         )
         connection.commit()
         connection.close()
+        if verbose:
+            print("CPU", datetime, temp)
 
-    def append_dht_reading(self, datetime, temp, hum):
+    def append_dht_reading(self, datetime, temp, hum, verbose=True):
         connection = sqlite3.connect(self._db)
         cursor = connection.cursor()
         cursor.execute(
@@ -73,6 +75,8 @@ class DBIO:
         )
         connection.commit()
         connection.close()
+        if verbose:
+            print("DHT22", datetime, temp, hum)
 
     def fetch_cpu_data(self, t_start=None, t_end=None):
         connection = sqlite3.connect(self._db)
