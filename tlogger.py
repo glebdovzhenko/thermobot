@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import os
 
 from dbio import DBIO
 
@@ -38,8 +39,10 @@ class Thermometer:
 
     async def measure_infinite(self, period: int = 1):
         while True:
+            dt = int(os.environ["MEAS_PERIOD"])
+            n_steps = os.environ["MEAS_PTS"]
             self.measure_once()
-            await asyncio.sleep(period)
+            await asyncio.sleep(dt)
 
 
 if __name__ == "__main__":
