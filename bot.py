@@ -6,8 +6,6 @@ from telegram.ext import (
     Application,
     CommandHandler,
     ContextTypes,
-    MessageHandler,
-    filters,
 )
 
 from matplotlib import pyplot as plt
@@ -78,8 +76,25 @@ class Bot:
             t_end=datetime.datetime.now(),
             t_start=datetime.datetime.now() - datetime.timedelta(days=1),
         )
-        fig = plt.figure()
-        plt.plot(pd.to_datetime(t_data[1]), t_data[2])
+
+        fig, ax1 = plt.subplots()
+
+        color = "tab:red"
+        ax1.set_xlabel("time (s)")
+        ax1.set_ylabel("Temperature [C]", color=color)
+        ax1.plot(pd.to_datetime(t_data[1]), t_data[2], color=color)
+        ax1.tick_params(axis="y", labelcolor=color)
+
+        ax2 = ax1.twinx()  # instantiate a second Axes that shares the same x-axis
+
+        color = "tab:blue"
+        ax2.set_ylabel(
+            "Humidity", color=color
+        )  # we already handled the x-label with ax1
+        ax2.plot(pd.to_datetime(t_data[1]), t_data[3], color=color)
+        ax2.tick_params(axis="y", labelcolor=color)
+
+        fig.tight_layout()
         plt.savefig("response.png")
         plt.close(fig)
 
