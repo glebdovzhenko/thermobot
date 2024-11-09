@@ -40,12 +40,29 @@ class Bot:
         if not self._check_user(update):
             return
 
-        t_data = self._dbio.fetch_cpu_data(
+        t_data = self._dbio.fetch_dht_data(
             t_end=datetime.datetime.now(),
             t_start=datetime.datetime.now() - datetime.timedelta(hours=1),
         )
-        fig = plt.figure()
-        plt.plot(pd.to_datetime(t_data[1]), t_data[2])
+
+        fig, ax1 = plt.subplots()
+
+        color = "tab:red"
+        ax1.set_xlabel("time (s)")
+        ax1.set_ylabel("Temperature [C]", color=color)
+        ax1.plot(pd.to_datetime(t_data[1]), t_data[2], color=color)
+        ax1.tick_params(axis="y", labelcolor=color)
+
+        ax2 = ax1.twinx()  # instantiate a second Axes that shares the same x-axis
+
+        color = "tab:blue"
+        ax2.set_ylabel(
+            "Humidity", color=color
+        )  # we already handled the x-label with ax1
+        ax2.plot(pd.to_datetime(t_data[1]), t_data[3], color=color)
+        ax2.tick_params(axis="y", labelcolor=color)
+
+        fig.tight_layout()
         plt.savefig("response.png")
         plt.close(fig)
 

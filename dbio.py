@@ -103,3 +103,29 @@ class DBIO:
         data = pd.DataFrame(data)
         data.set_index(0, inplace=True)
         return data
+
+    def fetch_dht_data(self, t_start=None, t_end=None):
+        connection = sqlite3.connect(self._db)
+        cursor = connection.cursor()
+        if t_start is None and t_end is None:
+            cmd = "SELECT * FROM dht22"
+        elif t_end is None:
+            t_end = datetime.datetime.now()
+            cmd = (
+                "SELECT * FROM dht22 WHERE date_time BETWEEN STRFTIME('%s') AND STRFTIME('%s');"
+                % (str(t_start), str(t_end))
+            )
+        elif t_start is None:
+            return
+        else:
+            cmd = (
+                "SELECT * FROM dht22 WHERE date_time BETWEEN STRFTIME('%s') AND STRFTIME('%s');"
+                % (str(t_start), str(t_end))
+            )
+
+        cursor.execute(cmd)
+        data = cursor.fetchall()
+        connection.close()
+        data = pd.DataFrame(data)
+        data.set_index(0, inplace=True)
+        return data
