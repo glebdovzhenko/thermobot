@@ -25,7 +25,7 @@ class DBIO:
         connection.commit()
         cursor.execute("INSERT INTO users (username) VALUES('glebdovzhenko');")
         connection.commit()
-        cursor.execute("INSERT INTO users (username) VALUES('DariaMorgenDorfer');")
+        cursor.execute("INSERT INTO users (username) VALUES('DariaMorgendorfer');")
         connection.commit()
         cursor.execute(
             """CREATE TABLE cpu (
